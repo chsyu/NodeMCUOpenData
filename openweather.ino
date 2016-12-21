@@ -7,7 +7,7 @@ const char* password = "";   // insert your password
 WiFiClient client;
 
 const char* server = "api.openweathermap.org";  // server's address
-const char* resource = "/data/2.5/weather?id=1668341&units=metric&APPID=7f9abc6839ab446bf8d5894bdae77685"; // insert your API key
+const char* resource = "/data/2.5/weather?id=1668341&units=metric&APPID=你的APPID"; // insert your API key
 
 char response[600]; // this fixed sized buffers works well for this project using the NodeMCU.
 
