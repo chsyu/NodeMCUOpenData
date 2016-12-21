@@ -11,6 +11,7 @@ const char* resource = "/data/2.5/weather?id=1668341&units=metric&APPID=7f9abc68
 
 char response[600]; // this fixed sized buffers works well for this project using the NodeMCU.
 
+
 void setup(){
     delay(3000);
     // initialize serial
@@ -22,11 +23,14 @@ void setup(){
     // initialize WiFi
     WiFi.begin(ssid, password);
     
-    while (WiFi.status() != WL_CONNECTED) {
+  
+  while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    
-    }
-   
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println(WiFi.localIP());    
 }
 
 
