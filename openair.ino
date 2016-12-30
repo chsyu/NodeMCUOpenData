@@ -9,7 +9,7 @@ WiFiClient client;
 const char* server = "opendata2.epa.gov.tw";  // server's address
 const char* resource = "/AQX.json"; 
 
-char response[30000], parse_res[1500]; // this fixed sized buffers works well for this project using the NodeMCU.
+char response[22000], parse_res[500]; // this fixed sized buffers works well for this project using the NodeMCU.
 
 void setup(){
     delay(3000);
@@ -53,7 +53,7 @@ void loop(){
     
         //Reading stream and remove headers
         client.setTimeout(5000);
-        client.readBytes(response, 25000);
+        client.readBytes(response, 5000);
         
         // process JSON
         DynamicJsonBuffer jsonBuffer;
@@ -119,7 +119,7 @@ void loop(){
     
         for(int x=0; x<10; x++){ // wait for new connection with progress indicator
             Serial.print(".");
-            delay(100); // the OWM free plan API does NOT allow more then 60 calls per minute
+            delay(1000); // the OWM free plan API does NOT allow more then 60 calls per minute
         }
         
         Serial.println("");
