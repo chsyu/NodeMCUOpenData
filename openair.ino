@@ -67,7 +67,7 @@ void loop(){
         while(!siteFound) {
           bool beginFound = false;
           bool endFound = false;
-          while(!beginFound || !endFound){
+          while(!beginFound || !endFound){ //利用判別 "{"與"}"判斷每一個站點JSON資料的開始與結束位置
               cnti++;
               if(int(response[cnti]) == 123) { // check for the "{" 
                 beginFound = true;
