@@ -67,17 +67,17 @@ void loop(){
         char* siteName = "古亭";
 
         while(!siteFound) {
-          bool beginFound = false;
-          bool endFound = false;
-          while((!beginFound || !endFound) && !noSuchSite){
+          bool jsonBeginFound = false;
+          bool jsonEndFound = false;
+          while((!jsonBeginFound || !jsonEndFound) && !noSuchSite){
               cnti++;
               if(int(response[cnti]) == 93 || cnti == eol) {
                 noSuchSite = true;
               } else if(int(response[cnti]) == 123) { // check for the "{"
-                beginFound = true;
+                jsonBeginFound = true;
                 bgni = cnti;
               } else if(int(response[cnti]) == 125) { // check for the "}"
-                endFound = true;
+                jsonEndFound = true;
                 endi = cnti;
               }
           }
