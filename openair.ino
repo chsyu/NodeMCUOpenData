@@ -62,12 +62,12 @@ void loop(){
         int cnti = 0;
         bool siteFound = false;
         char* location, site, publishTime, pm25, pm10, psi;
-        char* siteName = "古亭"; //設定要搜尋的站點
+        char* siteName = "古亭";
 
         while(!siteFound) {
           bool beginFound = false;
           bool endFound = false;
-          while(!beginFound || !endFound){ //利用判別 "{"與"}"判斷每一個站點JSON資料的開始與結束位置
+          while(!beginFound || !endFound){
               cnti++;
               if(int(response[cnti]) == 123) { // check for the "{" 
                 beginFound = true;
@@ -80,7 +80,7 @@ void loop(){
           
           int eol = sizeof(response);
   
-          //把每一個站點的量測JSON資料從response取出存在pares_res裡
+          //restructure by shifting the correct data
 //          Serial.println("restructure");
           for(int c=0; c<(endi-bgni+1); c++){
               parse_res[c] = response[((c+bgni))];
@@ -97,7 +97,7 @@ void loop(){
 //          }
           
           const char* site = root["SiteName"];
-          if(strcmp(site, siteName) == 0) { //判斷是否搜尋完成
+          if(strcmp(site, siteName) == 0) {
             siteFound = true;
             const char* location = root["County"];
             const char* publishTime = root["PublishTime"];
@@ -105,7 +105,7 @@ void loop(){
             const char* pm10 = root["PM10"];
             const char* psi = root["PSI"];
 
-            // 列印結果到Serial終端機
+            // Print data to Serial
             Serial.print(location);
             Serial.print(" ");
             Serial.print(site);
