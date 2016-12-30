@@ -64,7 +64,7 @@ void loop(){
         bool siteFound = false;
         bool noSuchSite = false;
         char* location, site, publishTime, pm25, pm10, psi;
-        char* siteName = "古亭";
+        char* siteName = "萬華";
 
         while(!siteFound) {
           bool jsonBeginFound = false;
