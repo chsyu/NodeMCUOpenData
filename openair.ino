@@ -14,36 +14,31 @@ char response[30000], parse_res[1500]; // this fixed sized buffers works well fo
 void setup(){
     delay(3000);
     // initialize serial
-    Serial.begin(115200);
-    while(!Serial){
-        delay(100);
-        }
+    Serial.begin(250000);
       
     // initialize WiFi
     WiFi.begin(ssid, password);
-    
+
+    //Connection WiFi    
+    Serial.println("");
     while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    
+      Serial.print(".");
+      delay(500);
     }
-   
+    Serial.println("");
+    Serial.println("Wi-Fi is Connected!!!");
 }
-
-
 
 void loop(){
     
         // connect to server  
         bool ok = client.connect(server, 80);
-        bool beginFound = false;
-        bool endFound = false;
-        
         while(!ok){
-            //Serial.print(".");
+            Serial.print(".");
             delay(500);        
         }
-    
-        delay(500);
+        Serial.println("");
+        Serial.println("Client is Connected!!!");
     
         //Send request to resource
         client.print("GET ");
@@ -62,72 +57,63 @@ void loop(){
         
         // process JSON
         DynamicJsonBuffer jsonBuffer;
-        
         int bgni = 0;
         int endi = 0;
         int cnti = 0;
-        while(!beginFound || !endFound){
-            cnti++;
-            if(int(response[bgni]) == 123){ // check for the "{" 
-              beginFound = true;
-//              bgni = cnti;
-            }
-            if(int(response[endi]) == 125){ // check for the "}" 
-              endFound = true;
-//              endi = cnti;
-            }
-           if(!beginFound) {
-            bgni++;
-           }
-           if(!endFound) {
-            endi++;
-           }
+        bool siteFound = false;
+        char* location, site, pm25, psi;
+        char* siteName = "士林";
+
+        while(!siteFound) {
+          bool beginFound = false;
+          bool endFound = false;
+          while(!beginFound || !endFound){
+              cnti++;
+              if(int(response[cnti]) == 123) { // check for the "{" 
+                beginFound = true;
+                bgni = cnti;
+              } else if(int(response[cnti]) == 125) { // check for the "}" 
+                endFound = true;
+                endi = cnti;
+              }
+          }
+          
+          int eol = sizeof(response);
+  
+          //restructure by shifting the correct data
+//          Serial.println("restructure");
+          for(int c=0; c<(endi-bgni+1); c++){
+              parse_res[c] = response[((c+bgni))];
+//            Serial.print(parse_res[c]);
+          }
+          
+          JsonObject& root = jsonBuffer.parseObject(parse_res);
+          
+//          if (!root.success()) {
+//            Serial.println("JSON parsing failed!");
+//          } 
+//          else {
+//            Serial.println("JSON parsing worked!");
+//          }
+          
+          const char* location = root["County"];
+          const char* site = root["SiteName"];
+          const char* pm25 = root["PM2.5"]; 
+          const char* psi = root["PSI"];
+          if(strcmp(site, siteName) == 0) {
+            siteFound = true;
+            // Print data to Serial
+            Serial.print(location);
+            Serial.print(" ");
+            Serial.print(site);
+            Serial.println("區");
+            Serial.print("PM2.5: ");
+            Serial.println(pm25);
+            Serial.print("PSI: ");
+            Serial.println(psi);
+            Serial.println("----------"); 
+          }
         }
-        
-        int eol = sizeof(response);
-        Serial.print("Length = ");
-        Serial.println(eol);
-        Serial.print("bgni = ");
-        Serial.println(bgni);
-        Serial.print("endi = ");
-        Serial.println(endi);
-
-        //restructure by shifting the correct data
-        Serial.println("restructure");
-        for(int c=0; c<(endi-bgni+1); c++){
-            parse_res[c] = response[((c+bgni))];
-            Serial.print(parse_res[c]);
-        }
- 
-        Serial.println("Done...");
-
-
-        
-        JsonObject& root = jsonBuffer.parseObject(parse_res);
-        
-        if (!root.success()) {
-          Serial.println("JSON parsing failed!");
-        } 
-        else {
-          Serial.println("JSON parsing worked!");
-        }
-
-//        JsonObject& rootAir = root[0];
-        
-        const char* location = root["County"];
-        const char* site = root["SiteName"];
-        const char* pm25 = root["PM2.5"]; 
-        const char* psi = root["PSI"];
-        // Print data to Serial
-        Serial.print("*** ");
-        Serial.print(location);
-        Serial.print("   ");
-        Serial.println(site);
-        Serial.print("PM2.5: ");
-        Serial.println(pm25);
-        Serial.print("PSI: ");
-        Serial.println(psi);
-        Serial.println("----------"); 
      
         client.stop(); // disconnect from server
     
