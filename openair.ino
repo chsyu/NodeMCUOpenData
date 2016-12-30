@@ -61,8 +61,8 @@ void loop(){
         int endi = 0;
         int cnti = 0;
         bool siteFound = false;
-        char* location, site, pm25, psi;
-        char* siteName = "士林";
+        char* location, site, publishTime, pm25, pm10, psi;
+        char* siteName = "古亭";
 
         while(!siteFound) {
           bool beginFound = false;
@@ -96,19 +96,25 @@ void loop(){
 //            Serial.println("JSON parsing worked!");
 //          }
           
-          const char* location = root["County"];
           const char* site = root["SiteName"];
-          const char* pm25 = root["PM2.5"]; 
-          const char* psi = root["PSI"];
           if(strcmp(site, siteName) == 0) {
             siteFound = true;
+            const char* location = root["County"];
+            const char* publishTime = root["PublishTime"];
+            const char* pm25 = root["PM2.5"]; 
+            const char* pm10 = root["PM10"];
+            const char* psi = root["PSI"];
+
             // Print data to Serial
             Serial.print(location);
             Serial.print(" ");
             Serial.print(site);
-            Serial.println("區");
+            Serial.print("區 ");
+            Serial.println(publishTime);
             Serial.print("PM2.5: ");
             Serial.println(pm25);
+            Serial.print("PM10: ");
+            Serial.println(pm10);
             Serial.print("PSI: ");
             Serial.println(psi);
             Serial.println("----------"); 
