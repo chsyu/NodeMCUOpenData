@@ -1,8 +1,8 @@
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 
-const char* ssid     = "lab506";           // insert your SSID
-const char* password = "173173173";   // insert your password
+const char* ssid     = "";           // insert your SSID
+const char* password = "";   // insert your password
 
 WiFiClient client;
 
